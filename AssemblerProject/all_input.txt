@@ -1,0 +1,1 @@
+.ent mainmain:addi $8, $8, 1addi $9, $8, 2add $t2, $8, $9bne $8, $t1, xyzbne $10, $8, donexyz:sub $8, $8, $t4done:jr $ra.end main

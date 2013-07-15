@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		27EF4C2F178DBA8F009B9380 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 27EF4C2E178DBA8F009B9380 /* main.c */; };
 		27EF4C31178DBA8F009B9380 /* AssemblerProject.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 27EF4C30178DBA8F009B9380 /* AssemblerProject.1 */; };
+		27EF4C46178DBAEF009B9380 /* assembler.c in Sources */ = {isa = PBXBuildFile; fileRef = 27EF4C37178DBAEF009B9380 /* assembler.c */; };
+		27EF4C47178DBAEF009B9380 /* utility.c in Sources */ = {isa = PBXBuildFile; fileRef = 27EF4C42178DBAEF009B9380 /* utility.c */; };
+		27EF4C48178DBAEF009B9380 /* vector.c in Sources */ = {isa = PBXBuildFile; fileRef = 27EF4C44178DBAEF009B9380 /* vector.c */; };
+		27EF4C4A178DBB07009B9380 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 27EF4C49178DBB07009B9380 /* main.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,8 +29,22 @@
 
 /* Begin PBXFileReference section */
 		27EF4C2B178DBA8F009B9380 /* AssemblerProject */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AssemblerProject; sourceTree = BUILT_PRODUCTS_DIR; };
-		27EF4C2E178DBA8F009B9380 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		27EF4C30178DBA8F009B9380 /* AssemblerProject.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = AssemblerProject.1; sourceTree = "<group>"; };
+		27EF4C37178DBAEF009B9380 /* assembler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = assembler.c; sourceTree = "<group>"; };
+		27EF4C38178DBAEF009B9380 /* assembler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = assembler.h; sourceTree = "<group>"; };
+		27EF4C3A178DBAEF009B9380 /* all_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = all_input.txt; path = tests/all_input.txt; sourceTree = "<group>"; };
+		27EF4C3B178DBAEF009B9380 /* all_output.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = all_output.txt; path = tests/all_output.txt; sourceTree = "<group>"; };
+		27EF4C3C178DBAEF009B9380 /* itype_branches_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = itype_branches_input.txt; sourceTree = "<group>"; };
+		27EF4C3D178DBAEF009B9380 /* itype_branches_output.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = itype_branches_output.txt; sourceTree = "<group>"; };
+		27EF4C3E178DBAEF009B9380 /* itype_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = itype_input.txt; sourceTree = "<group>"; };
+		27EF4C3F178DBAEF009B9380 /* itype_output.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = itype_output.txt; sourceTree = "<group>"; };
+		27EF4C40178DBAEF009B9380 /* rtype_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rtype_input.txt; sourceTree = "<group>"; };
+		27EF4C41178DBAEF009B9380 /* rtype_output.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rtype_output.txt; sourceTree = "<group>"; };
+		27EF4C42178DBAEF009B9380 /* utility.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utility.c; sourceTree = "<group>"; };
+		27EF4C43178DBAEF009B9380 /* utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utility.h; sourceTree = "<group>"; };
+		27EF4C44178DBAEF009B9380 /* vector.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vector.c; sourceTree = "<group>"; };
+		27EF4C45178DBAEF009B9380 /* vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
+		27EF4C49178DBB07009B9380 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,10 +77,32 @@
 		27EF4C2D178DBA8F009B9380 /* AssemblerProject */ = {
 			isa = PBXGroup;
 			children = (
-				27EF4C2E178DBA8F009B9380 /* main.c */,
+				27EF4C3A178DBAEF009B9380 /* all_input.txt */,
+				27EF4C3B178DBAEF009B9380 /* all_output.txt */,
+				27EF4C49178DBB07009B9380 /* main.c */,
+				27EF4C37178DBAEF009B9380 /* assembler.c */,
+				27EF4C38178DBAEF009B9380 /* assembler.h */,
+				27EF4C39178DBAEF009B9380 /* tests */,
+				27EF4C42178DBAEF009B9380 /* utility.c */,
+				27EF4C43178DBAEF009B9380 /* utility.h */,
+				27EF4C44178DBAEF009B9380 /* vector.c */,
+				27EF4C45178DBAEF009B9380 /* vector.h */,
 				27EF4C30178DBA8F009B9380 /* AssemblerProject.1 */,
 			);
 			path = AssemblerProject;
+			sourceTree = "<group>";
+		};
+		27EF4C39178DBAEF009B9380 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				27EF4C3C178DBAEF009B9380 /* itype_branches_input.txt */,
+				27EF4C3D178DBAEF009B9380 /* itype_branches_output.txt */,
+				27EF4C3E178DBAEF009B9380 /* itype_input.txt */,
+				27EF4C3F178DBAEF009B9380 /* itype_output.txt */,
+				27EF4C40178DBAEF009B9380 /* rtype_input.txt */,
+				27EF4C41178DBAEF009B9380 /* rtype_output.txt */,
+			);
+			path = tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,7 +156,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27EF4C2F178DBA8F009B9380 /* main.c in Sources */,
+				27EF4C46178DBAEF009B9380 /* assembler.c in Sources */,
+				27EF4C47178DBAEF009B9380 /* utility.c in Sources */,
+				27EF4C48178DBAEF009B9380 /* vector.c in Sources */,
+				27EF4C4A178DBB07009B9380 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +256,7 @@
 				27EF4C36178DBA8F009B9380 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
