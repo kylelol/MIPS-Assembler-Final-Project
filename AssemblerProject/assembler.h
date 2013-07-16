@@ -31,6 +31,13 @@ assemble(
 /*******************************************************************************
  ***** DEFINE YOUR FUNCTIONS BELOW *********************************************
  ******************************************************************************/
+typedef
+struct label_node
+{
+    int index;
+    char * label;
+}
+label_node_t;
 
 typedef enum { ent, txt, end} mipsAssemblerDirectiveEnum;
 typedef enum {add, divi, jr, mflo, mult, sll, sub, addi, bltz, bne, lw, sw, j, jal} mipsInstructionEnum;
