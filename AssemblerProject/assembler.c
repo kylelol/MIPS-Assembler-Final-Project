@@ -31,14 +31,14 @@ const char *mipsAssemblerDirectiveInstructions[3] =
 
 const char *mipsAssemblerInstructions[15] =
 {
-    "add",
+    "add", // Done
     "div",
     "jr",
     "mflo",
     "mult",
     "sll",
     "sub",
-    "addi",
+    "addi", // Done
     "bltz",
     "bne",
     "lw",
@@ -91,50 +91,20 @@ assemble(
          vector_uint_t * machine_code
         )
 {
+    int k = 0;
+    for ( k=0; k < mips_assembly->size; k++)
+        printf("%s\n", mips_assembly->elements[k]);
     // Allocate the label array.
     labelArray = (label_node_t**)malloc(sizeof(label_node_t*) * (strlen(mips_assembly->elements[0]) / 2) );
     
-    // 2D array to hold the instructions. 
-    char **instructions = (char**)malloc(sizeof(char*) * strlen(mips_assembly->elements[0]));
-    char *newMipsInstruction = strtok(mips_assembly->elements[0], "\r");
-       
-    // Parse the instructions from the vector_string_t into the 2D array.
-    int i=0;
-    int labelIndex=0;
-    while (newMipsInstruction != NULL)
-    {
-        // Allocate the space.
-        instructions[i] = (char*)malloc(sizeof(char) * strlen(newMipsInstruction));
-        
-        // Store the instruction.
-        instructions[i] = newMipsInstruction;
-        
-        // If a label, store the index, and label string for lookup later.
-        if (instructionIsALabel(newMipsInstruction))
-        {
-            label_node_t *node = (label_node_t*)malloc(sizeof(label_node_t));
-            node->index = i;
-            node->label = newMipsInstruction;
-            labelArray[labelIndex] = node;
-                        
-            labelIndex++;
-        }
-        
-        // Move to the next instruction.
-        newMipsInstruction = strtok(NULL, "\r");
-        
-        printf("%s\n", instructions[i]);
-        i++;
-    }
-    
     // Loop through the instructions
-    int length = i;
-    for (i = 0; i < length; i++)
+    int i=0;
+    for (i = 0; i < mips_assembly->size; i++)
     {
         // Check if instruction is an assembler directive.
-        if ( instructions[i][0] == '.')
+        if ( mips_assembly->elements[i][0] == '.')
         {
-            mipsAssemblerDirectiveEnum value = assemblerDirectiveInstruction( instructions[i] );
+            mipsAssemblerDirectiveEnum value = assemblerDirectiveInstruction( mips_assembly->elements[i] );
             
             switch (value)
             {
@@ -166,7 +136,7 @@ assemble(
         }
         
         // Check if instruction is a label
-        else if ( instructionIsALabel( instructions[i] ) )
+        else if ( instructionIsALabel( mips_assembly->elements[i] ) )
         {
             // TODO: Store the index of the label, for jump calls. 
         }
@@ -175,7 +145,7 @@ assemble(
         else
         {
             // Get the instruction.
-            char *instruction = instructions[i];
+            char *instruction = mips_assembly->elements[i];
             instruction = strtok(instruction, " ");
             
             mipsInstructionEnum value = mipsInstructionValue( instruction );
@@ -190,7 +160,8 @@ assemble(
                 }
                 case divi:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionDiv( instruction );
+                    printf("%d\n", machine_code->elements[i]);
                     break;
                 }
                 case jr:
@@ -344,11 +315,11 @@ unsigned int mipsInstructionAdd( char *instruction)
     
     //Get the value of R[rs].
     instruction = strtok(NULL, " $,");
-    unsigned int registerS = (int)instruction[0] - ZERO_CHAR_VALUE;
+    unsigned int registerS = convertRegisterNameToValue(instruction);
     
     // Get the value of R[rt].
     instruction = strtok(NULL, " $");
-    unsigned int registerT = (int)instruction[0] - ZERO_CHAR_VALUE;
+    unsigned int registerT = convertRegisterNameToValue(instruction);
     
     // Generate the machine code.
     returnValue = (registerS << 21) + (registerT << 16) + (registerD << 11) + 32;
@@ -378,6 +349,26 @@ unsigned int mipsInstructionAddi( char *instruction)
     returnValue = (8 << 26) + (registerS << 21) + (registerT << 16) + immediateValue;
         
     return returnValue;
+}
+
+unsigned int mipsInstructionDiv( char *instruction)
+{
+    unsigned int returnValue = 0;
+    
+    // Get the value of R[rt]
+    instruction = strtok(NULL, " $,");
+    unsigned int registerT = convertRegisterNameToValue(instruction);
+    
+    // Get the value of R[rt]
+    instruction = strtok(NULL, " $,");
+    unsigned int registerS = convertRegisterNameToValue(instruction);
+    
+    returnValue = (registerS << 21) + (registerT << 16) + 26;
+    
+    return returnValue;
+    
+    
+    
 }
 
 
