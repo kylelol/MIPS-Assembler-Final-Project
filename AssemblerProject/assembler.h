@@ -33,10 +33,15 @@ assemble(
  ******************************************************************************/
 
 typedef enum { ent, txt, end} mipsAssemblerDirectiveEnum;
+typedef enum {add, divi, jr, mflo, mult, sll, sub, addi, bltz, bne, lw, sw, j, jal} mipsInstructionEnum;
 
 void convertNewInstruction ( char **instruction, int size);
 int assemblerDirectiveInstruction( char *instruction);
 int instructionIsALabel(char *instruction);
+int mipsInstructionValue( char *instruction);
+int convertRegisterNameToValue( char *regName );
+unsigned int mipsInstructionAdd( char *instruction);
+unsigned int mipsInstructionAddi( char *instruction);
 
 
 

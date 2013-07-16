@@ -17,13 +17,16 @@
  ******************************************************************************/
 
 #define MIPS_ASSEMBLER_DIRECTIVE_INSTRUCTIONS_SIZE 3
+#define MIPS_ASSEMBLER_INSTRUCTIONS_ARRAY_SIZE 13
+#define MIPS_REGISTER_ARRAY_SIZE 32
+#define ZERO_CHAR_VALUE 48
 
 const char *mipsAssemblerDirectiveInstructions[3] = { ".ent", // 0
                                                   ".txt", // 1
                                                   ".end" // 2
                                                 };
 
-const char mipsAssemblerInstructions[15][4] = { "add",
+const char *mipsAssemblerInstructions[15] = { "add",
                                           "div",
                                           "jr",
                                           "mflo",
@@ -38,33 +41,199 @@ const char mipsAssemblerInstructions[15][4] = { "add",
                                           "j",
                                           "jal"
                                         };
+
+const char *mipsRegisters[32] = { "$zero",
+    "$at",
+    "$v0",
+    "$v1",
+    "$a0",
+    "$a1",
+    "$a2",
+    "$a3",
+    "$t0",
+    "$t1",
+    "$t2",
+    "$t3",
+    "$t4",
+    "$t5",
+    "$t6",
+    "$t7",
+    "$s0",
+    "$s1",
+    "$s2",
+    "$s3",
+    "$s4",
+    "$s5",
+    "$s6",
+    "$s7",
+    "$t8",
+    "$t9",
+    "$k0",
+    "$k1",
+    "$gp",
+    "$sp",
+    "$fp",
+    "$ra"
+};
+
 void
 assemble(
          vector_string_t * mips_assembly,
          vector_uint_t * machine_code
         )
 {
-    
+    // 2D array to hold the instructions. 
     char **instructions = (char**)malloc(sizeof(char*) * strlen(mips_assembly->elements[0]));
-   char *newMipsInstruction = strtok(mips_assembly->elements[0], " ");
-   
-   // char *newMipsInstruction = mips_assembly->elements[0];
+    char *newMipsInstruction = strtok(mips_assembly->elements[0], "\r");
+       
+    // Parse the instructions from the vector_string_t into the 2D array.
     int i=0;
     while (newMipsInstruction != NULL)
     {
         instructions[i] = (char*)malloc(sizeof(char) * strlen(newMipsInstruction));
         
         instructions[i] = newMipsInstruction;
-        newMipsInstruction = strtok(NULL, " ,\r");
+        newMipsInstruction = strtok(NULL, "\r");
         
         printf("%s\n", instructions[i]);
         i++;
     }
     
-   convertNewInstruction(instructions, (int)strlen(mips_assembly->elements[0]));
-    
-    
-    
+    // Loop through the instructions
+    int length = i;
+    for (i = 0; i < length; i++)
+    {
+        // Check if instruction is an assembler directive.
+        if ( instructions[i][0] == '.')
+        {
+            mipsAssemblerDirectiveEnum value = assemblerDirectiveInstruction( instructions[i] );
+            
+            switch (value)
+            {
+                // .ent directive.
+                case ent:
+                {
+                    
+                    break;
+                }
+                
+                // .txt directive.
+                case txt:
+                {
+                    break;
+                }
+                    
+                // .end directive.
+                case end:
+                {
+                    break;
+                }
+                  
+                // Must be an error.
+                default:
+                {
+                    break;
+                }
+            }
+        }
+        
+        // Check if instruction is a label
+        else if ( instructionIsALabel( instructions[i] ) )
+        {
+            // TODO: Store the index of the label, for jump calls. 
+        }
+        
+        // Otherwise check which MIPS instruction is being executed. 
+        else
+        {
+            // Get the instruction Opcode.
+            char *instruction = instructions[i];
+            instruction = strtok(instruction, " ");
+            
+            mipsInstructionEnum value = mipsInstructionValue( instruction );
+            
+            switch (value)
+            {
+                case add:
+                {
+                    machine_code->elements[i] = mipsInstructionAdd( instruction );
+                    break;
+                }
+                case divi:
+                {
+                    
+                    break;
+                }
+                case jr:
+                {
+                    
+                    break;
+                }
+                case mflo:
+                {
+                    
+                    break;
+                }
+                case mult:
+                {
+                    
+                    break;
+                }
+                case sll:
+                {
+                    
+                    break;
+                }
+                case sub:
+                {
+                    
+                    break;
+                }
+                case addi:
+                {
+                    machine_code->elements[i] = mipsInstructionAddi(instruction);
+                    break;
+                }
+                case bltz:
+                {
+                    
+                    break;
+                }
+                case bne:
+                {
+                    
+                    break;
+                }
+                case lw:
+                {
+                    
+                    break;
+                }
+                case sw:
+                {
+                    
+                    break;
+                }
+                case j:
+                {
+                    
+                    break;
+                }
+                case jal:
+                {
+                    
+                    break;
+                }
+                
+                // Instruction must be an error.d
+                default:
+                {
+                    break;
+                }
+            }
+        }
+        
+    }
 }
 
 /*******************************************************************************
@@ -72,54 +241,23 @@ assemble(
  ***** REMEMBER TO DEFINE YOUR FUNCTIONS IN assembler.h ************************
  ******************************************************************************/
 
-void convertNewInstruction ( char **instruction, int size)
-{
-    
-    int i = 0;
-    for (i=0; i < size; i++)
-    {
-        // Check if the instruction is an assembler directive instruction.
-        // Denoted with a '.' before the instruction.
-        if ( instruction[i][0] == '.')
-        {
-            mipsAssemblerDirectiveEnum value =  assemblerDirectiveInstruction(instruction[i]);
-        
-            switch (value)
-            {
-                
-                case ent:
-                    // get next instruction.
-                    printf("%s", instruction[i + 1]);
-                    i++;
-                    break;
-                case txt:
-                    // Skip to next instruction
-                    break;
-                
-                case end:
-                    // get the next label
-                    break;
-                
-                default:
-                    printf("must be an error");
-                    break;
-            }
+#pragma mark MIPS Helper Functions
 
-        }
+int mipsInstructionValue( char *instruction)
+{
+    int i=0;
+    for (i = 0; i < MIPS_ASSEMBLER_INSTRUCTIONS_ARRAY_SIZE; i++)
+    {
+        char *tempInstruction = (char * )mipsAssemblerInstructions[i];
         
-        else if ( instructionIsALabel(instruction[i]) )
+        if ( strcmp(instruction, tempInstruction) == 0)
         {
-            // TODO: Implement label instructions. 
-        }
-        
-        else
-        {
-            // TODO: Implement instructions
+            return i;
         }
     }
+    
+    return -1;
 }
-
-
 
 int assemblerDirectiveInstruction( char *instruction)
 {
@@ -143,11 +281,74 @@ int instructionIsALabel(char *instruction)
     
     if ( instruction[length-1] == ':')
     {
-        printf("\n%c----", instruction[length-1]);
         return 1;
     }
     
     return 0;
 }
+
+int convertRegisterNameToValue( char *regName )
+{
+    int i = 0;
+    for (i = 0; i < MIPS_REGISTER_ARRAY_SIZE; i++)
+    {
+        char *tempRegisterName = (char * )mipsRegisters[i];
+
+        if (strcmp(regName, tempRegisterName) == 0)
+            return i;
+    }
+    
+    return -1;
+}
+
+#pragma mark MIPS Instruction Functions
+
+unsigned int mipsInstructionAdd( char *instruction)
+{
+    unsigned int returnValue = 0;
+    
+    // Get the value of R[rd].
+    instruction = strtok(NULL, " ,");
+    unsigned int registerD = convertRegisterNameToValue(instruction);
+    
+    //Get the value of R[rs].
+    instruction = strtok(NULL, " $,");
+    unsigned int registerS = (int)instruction[0] - ZERO_CHAR_VALUE;
+    
+    // Get the value of R[rt].
+    instruction = strtok(NULL, " $");
+    unsigned int registerT = (int)instruction[0] - ZERO_CHAR_VALUE;
+    
+    // Generate the machine code.
+    returnValue = (registerS << 21) + (registerT << 16) + (10 << 11) + 32;
+        
+    return returnValue;
+    
+    
+}
+unsigned int mipsInstructionAddi( char *instruction)
+{
+    // Initialize the return value;
+    unsigned int returnValue = 0;
+    
+    // Get the value of R[rt]
+    instruction = strtok(NULL, " $,");
+    unsigned int registerT = (int)instruction[0] - ZERO_CHAR_VALUE;
+    
+    // Get the value of R[rs]
+    instruction = strtok(NULL, " $,");
+    unsigned int registerS = (int)instruction[0] - ZERO_CHAR_VALUE;
+    
+    // Get the immediate value.
+    instruction = strtok(NULL, " ");
+    unsigned int immediateValue = (int)instruction[0] - ZERO_CHAR_VALUE;
+    
+    // Generate the machine code. 
+    returnValue = (8 << 26) + (registerS << 21) + (registerT << 16) + immediateValue;
+        
+    return returnValue;
+}
+
+
 
 
