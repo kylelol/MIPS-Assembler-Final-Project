@@ -171,7 +171,8 @@ assemble(
                 }
                 case mflo:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionDiv( instruction );
+                    printf("%u\n", machine_code->elements[i]);
                     break;
                 }
                 case mult:
@@ -483,7 +484,17 @@ unsigned int mipsInstructionSub( char *instruction)
 //mflo
 //mflo $d
 //0000 0000 0000 0000 dddd d000 0001 0010
-
+unsigned int mipsInstructionMflo( char *instruction)
+{
+    unsigned int returnValue = 0;
+    
+    instruction = strtok(NULL, "$");
+    unsigned int registerD = convertRegisterNameToValue(instruction);
+    
+    returnValue = (registerD << 11) + 18;
+    
+    return returnValue;
+}
 
 
 

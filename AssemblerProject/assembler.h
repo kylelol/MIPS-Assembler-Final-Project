@@ -53,7 +53,8 @@ unsigned int mipsInstructionDiv( char *instruction);
 unsigned int mipsInstructionLW( char *instruction);
 unsigned int mipsInstructionMult( char *instruction);
 unsigned int mipsInstructionSw( char *instruction);
-unsigned int mipsInstructionSub( char *instruction)
+unsigned int mipsInstructionSub( char *instruction);
+unsigned int mipsInstructionMflo( char *instruction);
 
 
 

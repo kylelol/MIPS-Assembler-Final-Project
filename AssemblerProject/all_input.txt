@@ -5,7 +5,6 @@ main:
     bne $t0, $0, done
     
     addi $sp, $sp, -4
-sll
     sw $31, 0($sp)
     
     jal abc
