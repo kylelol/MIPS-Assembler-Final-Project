@@ -176,7 +176,8 @@ assemble(
                 }
                 case mult:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionMult(instruction);
+                    printf("%d\n",machine_code->elements[i] );
                     break;
                 }
                 case sll:
@@ -363,12 +364,32 @@ unsigned int mipsInstructionDiv( char *instruction)
     instruction = strtok(NULL, " $,");
     unsigned int registerS = convertRegisterNameToValue(instruction);
     
-    returnValue = (registerS << 21) + (registerT << 16) + 26;
+    returnValue = (registerT << 21) + (registerS << 16) + 26;
     
     return returnValue;
     
+}
+
+
+//mult $s, $t
+//0000 00ss ssst tttt 0000 0000 0001 1000
+
+unsigned int mipsInstructionMult( char *instruction)
+{
+    unsigned int returnValue = 0;
+    
+    // Get the value of R[rt]
+    instruction = strtok(NULL, " $,");
+    unsigned int registerS = convertRegisterNameToValue(instruction);
+    
+    // Get the value of R[rt]
+    instruction = strtok(NULL, " $,");
+    unsigned int registerT = convertRegisterNameToValue(instruction);
+    
+    returnValue = (registerT << 21) + (registerS << 16) + 24;
     
     
+    return returnValue;
 }
 
 

@@ -51,6 +51,7 @@ unsigned int mipsInstructionAdd( char *instruction);
 unsigned int mipsInstructionAddi( char *instruction);
 unsigned int mipsInstructionDiv( char *instruction);
 
+unsigned int mipsInstructionMult( char *instruction);
 
 
 
