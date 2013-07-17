@@ -155,13 +155,13 @@ assemble(
                 case add:
                 {
                     machine_code->elements[i] = mipsInstructionAdd( instruction );
-                    printf("%d\n", machine_code->elements[i]);
+                    printf("%u\n", machine_code->elements[i]);
                     break;
                 }
                 case divi:
                 {
                     machine_code->elements[i] = mipsInstructionDiv( instruction );
-                    printf("%d\n", machine_code->elements[i]);
+                    printf("%u\n", machine_code->elements[i]);
                     break;
                 }
                 case jr:
@@ -177,7 +177,7 @@ assemble(
                 case mult:
                 {
                     machine_code->elements[i] = mipsInstructionMult(instruction);
-                    printf("%d\n",machine_code->elements[i] );
+                    printf("%u\n",machine_code->elements[i] );
                     break;
                 }
                 case sll:
@@ -193,7 +193,7 @@ assemble(
                 case addi:
                 {
                     machine_code->elements[i] = mipsInstructionAddi(instruction);
-                    printf("%d\n",machine_code->elements[i] );
+                    printf("%u\n",machine_code->elements[i] );
                     break;
                 }
                 case bltz:
@@ -208,12 +208,14 @@ assemble(
                 }
                 case lw:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionLW(instruction);
+                    printf("%u\n",machine_code->elements[i] );
                     break;
                 }
                 case sw:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionLW(instruction);
+                    printf("%u\n",machine_code->elements[i] );
                     break;
                 }
                 case j:
@@ -358,13 +360,13 @@ unsigned int mipsInstructionDiv( char *instruction)
     
     // Get the value of R[rt]
     instruction = strtok(NULL, " $,");
-    unsigned int registerT = convertRegisterNameToValue(instruction);
+    unsigned int registerS = convertRegisterNameToValue(instruction);
     
     // Get the value of R[rt]
     instruction = strtok(NULL, " $,");
-    unsigned int registerS = convertRegisterNameToValue(instruction);
+    unsigned int registerT = convertRegisterNameToValue(instruction);
     
-    returnValue = (registerT << 21) + (registerS << 16) + 26;
+    returnValue = (registerS << 21) + (registerT << 16) + 26;
     
     return returnValue;
     
@@ -386,11 +388,102 @@ unsigned int mipsInstructionMult( char *instruction)
     instruction = strtok(NULL, " $,");
     unsigned int registerT = convertRegisterNameToValue(instruction);
     
-    returnValue = (registerT << 21) + (registerS << 16) + 24;
+    returnValue = (registerS << 21) + (registerT << 16) + 24;
     
     
     return returnValue;
 }
+
+
+//lw
+//lw $t, offset($s)
+//1000 11ss ssst tttt iiii iiii iiii iiii
+
+unsigned int mipsInstructionLW( char *instruction)
+{
+    // Initialize the return value;
+    unsigned int returnValue = 0;
+    
+    // Get the value of R[rt]
+    instruction = strtok(NULL, " $,");
+    unsigned int registerT = convertRegisterNameToValue(instruction);
+    
+    // Get the immediate value.
+    instruction = strtok(NULL, " (");
+    unsigned int immediateValue = convertRegisterNameToValue(instruction);
+    
+    // Get the value of R[rs]
+    instruction = strtok(NULL, " $)");
+    unsigned int registerS = convertRegisterNameToValue(instruction);
+
+    
+    // Generate the machine code.
+    returnValue = (35 << 26) + (registerS << 21) + (registerT << 16) + immediateValue;
+    
+    //int opcode = 35;
+    //returnValue = (opcode << 26);
+    
+    return returnValue;
+}
+
+unsigned int mipsInstructionSw( char *instruction)
+{
+    // Initialize the return value;
+    unsigned int returnValue = 0;
+    
+    // Get the value of R[rt]
+    instruction = strtok(NULL, " $,");
+    unsigned int registerT = convertRegisterNameToValue(instruction);
+    
+    // Get the immediate value.
+    instruction = strtok(NULL, " (");
+    unsigned int immediateValue = convertRegisterNameToValue(instruction);
+    
+    // Get the value of R[rs]
+    instruction = strtok(NULL, " $)");
+    unsigned int registerS = convertRegisterNameToValue(instruction);
+    
+    
+    // Generate the machine code.
+    returnValue = (43 << 26) + (registerS << 21) + (registerT << 16) + immediateValue;
+    
+    //int opcode = 35;
+    //returnValue = (opcode << 26);
+    
+    return returnValue;
+}
+
+//sub
+//sub $d, $s, $t
+//0000 00ss ssst tttt dddd d000 0010 0010
+unsigned int mipsInstructionSub( char *instruction)
+{
+    unsigned int returnValue = 0;
+    
+    // Get the value of R[rd].
+    instruction = strtok(NULL, " $,");
+    unsigned int registerD = convertRegisterNameToValue(instruction);
+    
+    //Get the value of R[rs].
+    instruction = strtok(NULL, " $,");
+    unsigned int registerS = convertRegisterNameToValue(instruction);
+    
+    // Get the value of R[rt].
+    instruction = strtok(NULL, " $");
+    unsigned int registerT = convertRegisterNameToValue(instruction);
+    
+    // Generate the machine code.
+    returnValue = (registerS << 21) + (registerT << 16) + (registerD << 11) + 34;
+    
+    return returnValue;
+}
+
+
+//mflo
+//mflo $d
+//0000 0000 0000 0000 dddd d000 0001 0010
+
+
 
 
 

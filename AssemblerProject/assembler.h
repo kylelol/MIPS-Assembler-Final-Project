@@ -50,8 +50,11 @@ int convertRegisterNameToValue( char *regName );
 unsigned int mipsInstructionAdd( char *instruction);
 unsigned int mipsInstructionAddi( char *instruction);
 unsigned int mipsInstructionDiv( char *instruction);
-
+unsigned int mipsInstructionLW( char *instruction);
 unsigned int mipsInstructionMult( char *instruction);
+unsigned int mipsInstructionSw( char *instruction);
+unsigned int mipsInstructionSub( char *instruction)
+
 
 
 
