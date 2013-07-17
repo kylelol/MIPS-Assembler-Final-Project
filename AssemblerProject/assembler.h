@@ -55,6 +55,8 @@ unsigned int mipsInstructionMult( char *instruction);
 unsigned int mipsInstructionSw( char *instruction);
 unsigned int mipsInstructionSub( char *instruction);
 unsigned int mipsInstructionMflo( char *instruction);
+unsigned int mipsInstructionJr( char *instruction);
+unsigned int mipsInstructionBltz( char *instruction);
 
 
 

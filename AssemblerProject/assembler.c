@@ -83,6 +83,43 @@ const char *mipsRegisters[32] =
     "ra"
 };
 
+
+const char *mipsRegisterAddress[32] =
+{
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "26",
+    "27",
+    "28",
+    "29",
+    "30",
+    "31"
+};
+
 label_node_t **labelArray;
 
 void
@@ -166,12 +203,13 @@ assemble(
                 }
                 case jr:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionJr( instruction );
+                    printf("%u\n", machine_code->elements[i]);
                     break;
                 }
                 case mflo:
                 {
-                    machine_code->elements[i] = mipsInstructionDiv( instruction );
+                    machine_code->elements[i] = mipsInstructionMflo( instruction );
                     printf("%u\n", machine_code->elements[i]);
                     break;
                 }
@@ -188,7 +226,7 @@ assemble(
                 }
                 case sub:
                 {
-                    machine_code->elements[i] = mipsInstructionAddi(instruction);
+                    machine_code->elements[i] = mipsInstructionSub(instruction);
                     printf("%u\n",machine_code->elements[i] );
                     break;
                 }
@@ -200,7 +238,8 @@ assemble(
                 }
                 case bltz:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionBltz(instruction);
+                    printf("%u\n",machine_code->elements[i] );
                     break;
                 }
                 case bne:
@@ -216,7 +255,7 @@ assemble(
                 }
                 case sw:
                 {
-                    machine_code->elements[i] = mipsInstructionLW(instruction);
+                    machine_code->elements[i] = mipsInstructionSw(instruction);
                     printf("%u\n",machine_code->elements[i] );
                     break;
                 }
@@ -299,9 +338,10 @@ int convertRegisterNameToValue( char *regName )
     for (i = 0; i < MIPS_REGISTER_ARRAY_SIZE; i++)
     {
         char *tempRegisterName = (char * )mipsRegisters[i];
-        int val = (int)regName[0] - ZERO_CHAR_VALUE;
+        char *tempRegisterAddr = (char * )mipsRegisterAddress[i];
+        //char val = (int)regName[0] - 48;
         
-        if (strcmp(regName, tempRegisterName) == 0 || val == i)
+        if (strcmp(regName, tempRegisterName) == 0 || strcmp(regName, tempRegisterAddr) == 0)
             return i;
     }
     
@@ -496,7 +536,39 @@ unsigned int mipsInstructionMflo( char *instruction)
     return returnValue;
 }
 
+//jr
+//jr $s
+//0000 00ss sss0 0000 0000 0000 0000 1000
+unsigned int mipsInstructionJr( char *instruction)
+{
+    unsigned int returnValue = 0;
+    
+    instruction = strtok(NULL, "$");
+    unsigned int registerS = convertRegisterNameToValue(instruction);
+    
+    returnValue = (registerS << 21) + 8;
+    
+    return returnValue;
+}
 
+//bltz
+//bltz $s, offset
+//0000 01ss sss0 0000 iiii iiii iiii iiii
+unsigned int mipsInstructionBltz( char *instruction)
+{
+    unsigned int returnValue = 0;
+    
+    instruction = strtok(NULL, "$,");
+    unsigned int registerS = convertRegisterNameToValue(instruction);
+    
+    //offset may be a label address
+    instruction = strtok(NULL, " ");
+    unsigned int offset = (unsigned int)instruction;
+    
+    returnValue = (1 << 26) + (registerS << 21) + offset;
+    
+    return returnValue;
+}
 
 
 
