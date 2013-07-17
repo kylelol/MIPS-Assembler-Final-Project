@@ -187,7 +187,8 @@ assemble(
                 }
                 case sub:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionAddi(instruction);
+                    printf("%u\n",machine_code->elements[i] );
                     break;
                 }
                 case addi:
