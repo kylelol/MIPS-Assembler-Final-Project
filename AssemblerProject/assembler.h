@@ -56,8 +56,12 @@ unsigned int mipsInstructionSw( char *instruction);
 unsigned int mipsInstructionSub( char *instruction);
 unsigned int mipsInstructionMflo( char *instruction);
 unsigned int mipsInstructionJr( char *instruction);
-unsigned int mipsInstructionBltz( char *instruction);
-
+unsigned int mipsInstructionBne(char *instruction, vector_string_t *mips_assembly, int instructionIndex);
+unsigned int mipsInstructionBltz(char *instruction, vector_string_t *mips_assembly, int instructionIndex);
+unsigned int mipsInstructionJ(char *instruction, vector_string_t *mips_assembly, int instructionIndex);
+unsigned int mipsInstructionJal(char *instruction, vector_string_t *mips_assembly, int instructionIndex);
+unsigned int mipsInstructionSll( char *instruction);
+int calculateJumpOffSet(vector_string_t *mips_assembly, char *labelName);
 
 
 

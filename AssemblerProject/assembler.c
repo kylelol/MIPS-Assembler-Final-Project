@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 #define MIPS_ASSEMBLER_DIRECTIVE_INSTRUCTIONS_SIZE 3
-#define MIPS_ASSEMBLER_INSTRUCTIONS_ARRAY_SIZE 13
+#define MIPS_ASSEMBLER_INSTRUCTIONS_ARRAY_SIZE 14
 #define MIPS_REGISTER_ARRAY_SIZE 32
 #define ZERO_CHAR_VALUE 48
 
@@ -32,19 +32,19 @@ const char *mipsAssemblerDirectiveInstructions[3] =
 const char *mipsAssemblerInstructions[15] =
 {
     "add", // Done
-    "div",
-    "jr",
-    "mflo",
-    "mult",
-    "sll",
-    "sub",
+    "div", // Done
+    "jr",  // Done
+    "mflo", // Done
+    "mult", // Done
+    "sll",  // Done
+    "sub",  // Done
     "addi", // Done
-    "bltz",
-    "bne",
-    "lw",
-    "sw",
-    "j",
-    "jal"
+    "bltz", // Done
+    "bne", // Done
+    "lw",   // Done
+    "sw",   //Done
+    "j",    //Done
+    "jal"   //Done
 };
 
 const char *mipsRegisters[32] =
@@ -135,6 +135,7 @@ assemble(
     labelArray = (label_node_t**)malloc(sizeof(label_node_t*) * (strlen(mips_assembly->elements[0]) / 2) );
     
     // Loop through the instructions
+    int index = 0;
     int i=0;
     for (i = 0; i < mips_assembly->size; i++)
     {
@@ -181,6 +182,7 @@ assemble(
         // Otherwise check which MIPS instruction is being executed. 
         else
         {
+            index++;
             // Get the instruction.
             char *instruction = mips_assembly->elements[i];
             instruction = strtok(instruction, " ");
@@ -192,81 +194,85 @@ assemble(
                 case add:
                 {
                     machine_code->elements[i] = mipsInstructionAdd( instruction );
-                    printf("%u\n", machine_code->elements[i]);
+                    printf("add %u\n", machine_code->elements[i]);
                     break;
                 }
                 case divi:
                 {
                     machine_code->elements[i] = mipsInstructionDiv( instruction );
-                    printf("%u\n", machine_code->elements[i]);
+                    printf("div %u\n", machine_code->elements[i]);
                     break;
                 }
                 case jr:
                 {
                     machine_code->elements[i] = mipsInstructionJr( instruction );
-                    printf("%u\n", machine_code->elements[i]);
+                    printf("jr %u\n", machine_code->elements[i]);
                     break;
                 }
                 case mflo:
                 {
                     machine_code->elements[i] = mipsInstructionMflo( instruction );
-                    printf("%u\n", machine_code->elements[i]);
+                    printf("mflo %u\n", machine_code->elements[i]);
                     break;
                 }
                 case mult:
                 {
                     machine_code->elements[i] = mipsInstructionMult(instruction);
-                    printf("%u\n",machine_code->elements[i] );
+                    printf("mult %u\n",machine_code->elements[i] );
                     break;
                 }
                 case sll:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionSll(instruction);
+                    printf("sll %u\n",machine_code->elements[i] );
                     break;
                 }
                 case sub:
                 {
                     machine_code->elements[i] = mipsInstructionSub(instruction);
-                    printf("%u\n",machine_code->elements[i] );
+                    printf("sub %u\n",machine_code->elements[i] );
                     break;
                 }
                 case addi:
                 {
                     machine_code->elements[i] = mipsInstructionAddi(instruction);
-                    printf("%u\n",machine_code->elements[i] );
+                    printf("addi %u\n",machine_code->elements[i] );
                     break;
                 }
                 case bltz:
                 {
-                    machine_code->elements[i] = mipsInstructionBltz(instruction);
-                    printf("%u\n",machine_code->elements[i] );
+                    machine_code->elements[i] = mipsInstructionBltz(instruction, mips_assembly, index);
+                    printf("bltz %u\n",machine_code->elements[i] );
                     break;
                 }
                 case bne:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionBne(instruction, mips_assembly, index);
+                    printf("bne %u\n",machine_code->elements[i] );
                     break;
                 }
                 case lw:
                 {
                     machine_code->elements[i] = mipsInstructionLW(instruction);
-                    printf("%u\n",machine_code->elements[i] );
+                    printf("lw %u\n",machine_code->elements[i] );
                     break;
                 }
                 case sw:
                 {
                     machine_code->elements[i] = mipsInstructionSw(instruction);
-                    printf("%u\n",machine_code->elements[i] );
+                    printf("sw %u\n",machine_code->elements[i] );
                     break;
                 }
                 case j:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionJ(instruction, mips_assembly, index);
+                    printf("j %u\n",machine_code->elements[i] );
                     break;
                 }
                 case jal:
                 {
-                    
+                    machine_code->elements[i] = mipsInstructionJal(instruction, mips_assembly, index);
+                    printf("jal %u\n",machine_code->elements[i] );
                     break;
                 }
                 
@@ -384,7 +390,7 @@ unsigned int mipsInstructionAddi( char *instruction)
     
     // Get the value of R[rs]
     instruction = strtok(NULL, " $,");
-    unsigned int registerS = (int)instruction[0] - ZERO_CHAR_VALUE;
+    unsigned int registerS = convertRegisterNameToValue(instruction);
     
     // Get the immediate value.
     instruction = strtok(NULL, " ");
@@ -524,6 +530,7 @@ unsigned int mipsInstructionSub( char *instruction)
 //mflo
 //mflo $d
 //0000 0000 0000 0000 dddd d000 0001 0010
+//works
 unsigned int mipsInstructionMflo( char *instruction)
 {
     unsigned int returnValue = 0;
@@ -539,6 +546,7 @@ unsigned int mipsInstructionMflo( char *instruction)
 //jr
 //jr $s
 //0000 00ss sss0 0000 0000 0000 0000 1000
+//works
 unsigned int mipsInstructionJr( char *instruction)
 {
     unsigned int returnValue = 0;
@@ -554,7 +562,9 @@ unsigned int mipsInstructionJr( char *instruction)
 //bltz
 //bltz $s, offset
 //0000 01ss sss0 0000 iiii iiii iiii iiii
-unsigned int mipsInstructionBltz( char *instruction)
+
+//doesnt work yet
+unsigned int mipsInstructionBltz(char *instruction, vector_string_t *mips_assembly, int instructionIndex)
 {
     unsigned int returnValue = 0;
     
@@ -563,12 +573,154 @@ unsigned int mipsInstructionBltz( char *instruction)
     
     //offset may be a label address
     instruction = strtok(NULL, " ");
-    unsigned int offset = (unsigned int)instruction;
+    //printf("%s", instruction);
+    unsigned int labelIndex = calculateJumpOffSet(mips_assembly, instruction);
     
-    returnValue = (1 << 26) + (registerS << 21) + offset;
+    unsigned int offset = labelIndex - instructionIndex;
+
+    
+    returnValue = (1 << 26) + (registerS << 21);
+    returnValue = returnValue | (offset & 0xFFFF);
     
     return returnValue;
 }
 
 
+
+//bne
+//bne $s, $t, offset
+//0001 01ss ssst tttt iiii iiii iiii iiii
+unsigned int mipsInstructionBne(char *instruction, vector_string_t *mips_assembly, int instructionIndex)
+{
+    unsigned int returnValue = 0;
+    
+    instruction = strtok(NULL, " $,");
+    unsigned int registerS = convertRegisterNameToValue(instruction);
+    
+    instruction = strtok(NULL, " $,");
+    unsigned int registerT = convertRegisterNameToValue(instruction);
+    
+    instruction = strtok(NULL, " ");
+    //printf("%s", instruction);
+    unsigned int labelIndex = calculateJumpOffSet(mips_assembly, instruction);
+    
+    unsigned int offset = labelIndex - instructionIndex;
+    
+    returnValue = (5 << 26) + (registerS << 21) + (registerT << 16) + offset;
+    //printf("%u", returnValue);
+    
+    return returnValue;
+    
+}
+
+//j
+//j target
+//0000 10ii iiii iiii iiii iiii iiii iiii
+unsigned int mipsInstructionJ(char *instruction, vector_string_t *mips_assembly, int instructionIndex)
+{
+    int returnValue = 0;
+    
+    instruction = strtok(NULL, " ");
+    int labelIndex = calculateJumpOffSet(mips_assembly, instruction);
+    
+    int offset = labelIndex - instructionIndex;
+    //int offset = -8;
+    
+    
+    returnValue = returnValue | (2 << 26);
+    returnValue = returnValue | (offset & 0x3FFFFFF);
+    //printf("%u", returnValue);
+    
+    //returnValue = (2 << 26) + offset;
+    
+    return returnValue;
+}
+
+//jal
+//jal target
+//0000 11ii iiii iiii iiii iiii iiii iiii
+unsigned int mipsInstructionJal(char *instruction, vector_string_t *mips_assembly, int instructionIndex)
+{
+    unsigned int returnValue = 0;
+    
+    instruction = strtok(NULL, " ");
+    unsigned int labelIndex = calculateJumpOffSet(mips_assembly, instruction);
+    
+    unsigned int offset = labelIndex - instructionIndex;
+    
+    
+    returnValue = returnValue | (3 << 26);
+    returnValue = returnValue | (offset & 0x3FFFFFF);
+    //returnValue = (3 << 26) + offset;
+    //printf("%u", returnValue);
+    
+    return returnValue;
+}
+
+
+//sll
+//sll $d, $t, h
+//0000 0000 000t tttt dddd dhhh hh00 0000
+//0000 00ss ssst tttt dddd d000 0010 0010
+unsigned int mipsInstructionSll( char *instruction)
+{
+    unsigned int returnValue = 0;
+    
+    // Get the value of R[rd].
+    instruction = strtok(NULL, " $,");
+    unsigned int registerD = convertRegisterNameToValue(instruction);
+    
+    // Get the value of R[rt].
+    instruction = strtok(NULL, " $,");
+    unsigned int registerT = convertRegisterNameToValue(instruction);
+    
+    instruction = strtok(NULL, " ");
+    unsigned int immediateValue = convertRegisterNameToValue(instruction);
+    
+    // Generate the machine code.
+    returnValue = (registerT << 16) + (registerD << 11);
+    returnValue = returnValue | ((immediateValue << 6) & 0x7FF);
+    
+    return returnValue;
+}
+
+
+
+int calculateJumpOffSet(vector_string_t *mips_assembly, char *labelName)
+{
+    strcat(labelName, ":");
+    
+    //printf("%s", labelName);
+    
+    int labelIndex = 0;
+    int index = 0;
+    int i = 0;
+    for ( i = 0; i < mips_assembly->size; i++)
+    {
+        if ( strcmp(labelName, mips_assembly->elements[i]) == 0)
+        {
+            labelIndex = index;
+        }
+        else if ( instructionIsALabel(mips_assembly->elements[i]))
+        {
+            continue;
+        }
+        else if ( mips_assembly->elements[i][0] == '.')
+        {
+            continue;
+        }
+        else
+        {
+            index++;
+        }
+    }
+    
+    if (labelIndex == 0)
+    {
+        labelIndex = 1;
+    }
+    
+    return labelIndex;
+    
+}
 
