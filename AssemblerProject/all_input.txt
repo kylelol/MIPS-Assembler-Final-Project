@@ -1,6 +1,7 @@
     .text
     .ent main
 main:
+    sll $t7, $8, 14
     bltz $t0, done
     bne $t0, $0, done
     

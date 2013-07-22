@@ -50,6 +50,18 @@ int convertRegisterNameToValue( char *regName );
 unsigned int mipsInstructionAdd( char *instruction);
 unsigned int mipsInstructionAddi( char *instruction);
 unsigned int mipsInstructionDiv( char *instruction);
+unsigned int mipsInstructionLw( char *instruction );
+unsigned int mipsInstructionSw( char *instruction );
+unsigned int mipsInstructionMult( char * instruction );
+unsigned int mipsInstructionMflo( char * instruction);
+unsigned int mipsInstructionSub( char * instruction);
+int calculateJumpOffSet(vector_string_t *mips_assembly, char *labelName);
+unsigned int mipsInstructionBltz( char *instruction, vector_string_t *mips_assembly, int index);
+unsigned int mipsInstructionBne(char *instruction, vector_string_t *mips_assembly, int instructionIndex);
+unsigned int mipsInstructionJal(char *instruction, vector_string_t *mips_assembly, int instructionIndex);
+unsigned int mipsInstructionJ(char *instruction, vector_string_t *mips_assembly, int instructionIndex);
+unsigned int mipsInstructionJr( char *instruction);
+unsigned int mipsInstructionSll( char *instruction);
 
 
 
