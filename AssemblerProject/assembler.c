@@ -120,19 +120,17 @@ const char *mipsRegisterAddress[32] =
     "31"
 };
 
-label_node_t **labelArray;
-
 void
 assemble(
          vector_string_t * mips_assembly,
          vector_uint_t * machine_code
         )
 {
-    int k = 0;
-    for ( k=0; k < mips_assembly->size; k++)
-        printf("%s\n", mips_assembly->elements[k]);
+    //int k = 0;
+    //for ( k=0; k < mips_assembly->size; k++)
+        //printf("%s\n", mips_assembly->elements[k]);
     // Allocate the label array.
-    labelArray = (label_node_t**)malloc(sizeof(label_node_t*) * (strlen(mips_assembly->elements[0]) / 2) );
+    //labelArray = (label_node_t**)malloc(sizeof(label_node_t*) * (strlen(mips_assembly->elements[0]) / 2) );
     
     // Loop through the instructions
     int index = 0;
@@ -176,7 +174,8 @@ assemble(
         // Check if instruction is a label
         else if ( instructionIsALabel( mips_assembly->elements[i] ) )
         {
-            // TODO: Store the index of the label, for jump calls. 
+            // TODO: Store the index of the label, for jump calls.
+            continue;
         }
         
         // Otherwise check which MIPS instruction is being executed. 
