@@ -402,7 +402,9 @@ unsigned int mipsInstructionAddi( char *instruction)
     // Get the immediate value.
     instruction = strtok(NULL, " ");
     printf("instruction %s\n", instruction);
-    unsigned int immediateValue = (int)instruction;
+    int immediateValue = 0;
+    sscanf(instruction, "%d" , &immediateValue);
+    //unsigned int immediateValue = (int)instruction;
     printf("imm value %d\n", immediateValue);
     //
     //
@@ -435,7 +437,9 @@ unsigned int mipsInstructionDiv( char *instruction)
     instruction = strtok(NULL, " $,");
     unsigned int registerT = convertRegisterNameToValue(instruction);
     
-    returnValue = (registerS << 21) + (registerT << 16) + 26;
+    returnValue = returnValue | (registerS << 21);
+    returnValue = returnValue | (registerT << 16);
+    returnValue = returnValue | (26);
     
     return returnValue;
     
@@ -457,7 +461,9 @@ unsigned int mipsInstructionMult( char *instruction)
     instruction = strtok(NULL, " $,");
     unsigned int registerT = convertRegisterNameToValue(instruction);
     
-    returnValue = (registerS << 21) + (registerT << 16) + 24;
+    returnValue = returnValue | (registerS << 21);
+    returnValue = returnValue | (registerT << 16);
+    returnValue = returnValue | (24);
     
     
     return returnValue;
@@ -487,7 +493,11 @@ unsigned int mipsInstructionLW( char *instruction)
 
     
     // Generate the machine code.
-    returnValue = (35 << 26) + (registerS << 21) + (registerT << 16) + immediateValue;
+    returnValue = returnValue | (35 << 26);
+    returnValue = returnValue | (registerS << 21);
+    returnValue = returnValue | (registerT << 16);
+    returnValue = returnValue | (immediateValue & 0xFFFF);
+        
     
     //int opcode = 35;
     //returnValue = (opcode << 26);
@@ -495,6 +505,8 @@ unsigned int mipsInstructionLW( char *instruction)
     return returnValue;
 }
 
+//sw $t, offset($s)
+//1010 11ss ssst tttt iiii iiii iiii iiii
 unsigned int mipsInstructionSw( char *instruction)
 {
     // Initialize the return value;
@@ -514,7 +526,10 @@ unsigned int mipsInstructionSw( char *instruction)
     
     
     // Generate the machine code.
-    returnValue = (43 << 26) + (registerS << 21) + (registerT << 16) + immediateValue;
+    returnValue = returnValue | (43 << 26);
+    returnValue = returnValue | (registerS << 21);
+    returnValue = returnValue | (registerT << 16);
+    returnValue = returnValue | (immediateValue & 0xFFFF);
     
     //int opcode = 35;
     //returnValue = (opcode << 26);
@@ -542,7 +557,10 @@ unsigned int mipsInstructionSub( char *instruction)
     unsigned int registerT = convertRegisterNameToValue(instruction);
     
     // Generate the machine code.
-    returnValue = (registerS << 21) + (registerT << 16) + (registerD << 11) + 34;
+    returnValue = returnValue | (registerS << 21);
+    returnValue = returnValue | (registerT << 16);
+    returnValue = returnValue | (registerD << 11);
+    returnValue = returnValue | (34);
     
     return returnValue;
 }
@@ -559,7 +577,8 @@ unsigned int mipsInstructionMflo( char *instruction)
     instruction = strtok(NULL, "$");
     unsigned int registerD = convertRegisterNameToValue(instruction);
     
-    returnValue = (registerD << 11) + 18;
+    returnValue = returnValue | (registerD << 11);
+    returnValue = returnValue | (18);
     
     return returnValue;
 }
@@ -575,7 +594,8 @@ unsigned int mipsInstructionJr( char *instruction)
     instruction = strtok(NULL, "$");
     unsigned int registerS = convertRegisterNameToValue(instruction);
     
-    returnValue = (registerS << 21) + 8;
+    returnValue = returnValue | (registerS << 21);
+    returnValue = returnValue | (8);
     
     return returnValue;
 }
@@ -600,14 +620,16 @@ unsigned int mipsInstructionBltz(char *instruction, vector_string_t *mips_assemb
     unsigned int offset = labelIndex - instructionIndex;
 
     
-    returnValue = (1 << 26) + (registerS << 21);
+    returnValue = returnValue | (1 << 26);
+    returnValue = returnValue | (registerS << 21);
     returnValue = returnValue | (offset & 0xFFFF);
     
     return returnValue;
 }
 
-
-
+//
+//one off?
+//
 //bne
 //bne $s, $t, offset
 //0001 01ss ssst tttt iiii iiii iiii iiii
@@ -627,13 +649,19 @@ unsigned int mipsInstructionBne(char *instruction, vector_string_t *mips_assembl
     
     unsigned int offset = labelIndex - instructionIndex;
     
-    returnValue = (5 << 26) + (registerS << 21) + (registerT << 16) + offset;
+    returnValue = returnValue | (5 << 26);
+    returnValue = returnValue | (registerS << 21);
+    returnValue = returnValue | (registerT << 16);
+    returnValue = returnValue | (offset & 0xFFFF);
     //printf("%u", returnValue);
     
     return returnValue;
     
 }
 
+//
+//one off????
+//
 //j
 //j target
 //0000 10ii iiii iiii iiii iiii iiii iiii
@@ -699,7 +727,8 @@ unsigned int mipsInstructionSll( char *instruction)
     unsigned int immediateValue = convertRegisterNameToValue(instruction);
     
     // Generate the machine code.
-    returnValue = (registerT << 16) + (registerD << 11);
+    returnValue = returnValue | (registerT << 16);
+    returnValue = returnValue | (registerD << 11);
     returnValue = returnValue | ((immediateValue << 6) & 0x7FF);
     
     return returnValue;
